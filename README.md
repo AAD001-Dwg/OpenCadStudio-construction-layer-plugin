@@ -2,7 +2,7 @@
 
 [![Open CAD Studio](https://img.shields.io/badge/Open_CAD_Studio-Add--on-blue.svg)](https://github.com/HakanSeven12/OpenCADStudio)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/AAD001-Dwg/OpenCadStudio-construction-layer-plugin)](https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin/releases)
+[![GitHub release](https://img.shields.io/github/v/release/alan0018ad/opencad-construction-plugin)](https://github.com/alan0018ad/opencad-construction-plugin/releases)
 
 Complemento para **Open CAD Studio** que introduce **Capas de Construcción y Líneas Guía Infinitas**, inspirado en las mejores características de **LibreCAD** y **FreeCAD**.
 
@@ -17,8 +17,8 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 - ○ **Círculos de Referencia (`CCIRCLE`):** Circunferencias auxiliares ideales para círculos de centros de agujeros y radios de referencia.
 - ✦ **Modo Referencia Inteligente (*Reference-Only* - API v9):** Las geometrías de construcción permiten el 100% de captura y precisión (*OSNAP*: extremos, centros, intersecciones), pero los clics ordinarios del mouse las atraviesan (*click-through*), evitando selecciones accidentales mientras diseñas.
 - 🖨 **100% No-Imprimible (*No-Plot*):** Las capas de construcción se configuran automáticamente como no ploteables, garantizando que nunca aparezcan en planos impresos ni en exportaciones PDF.
-- 💾 **Compatibilidad Estándar DWG / DXF:** Utiliza el tag estándar `[CONSTRUCTION]` y el APPID registrado `OPENCAD_CONSTRUCTION`. Tus dibujos pueden abrirse en AutoCAD, Civil 3D o LibreCAD sin corromperse ni generar advertencias.
-- 🌐 **Comandos Bilingües y Cinta de Opciones:** Soporte completo en español e inglés, con una pestaña dedicada en la Cinta de Opciones (*Ribbon*).
+- 🔄 **Auto-Conversión Reactiva (`HostNotification::DrawingChanged`):** Al dibujar con el comando normal `LINE` (`L`) sobre una capa de construcción activa, el plugin convierte automáticamente la línea en una guía infinita y la marca como referencia sin que tengas que cambiar de comando.
+- 📐 **Presets Rápidos Horizontal / Vertical:** Trazado de guías horizontales (`CLINE H`) y verticales (`CLINE V`) con un solo clic.
 
 ---
 
@@ -27,6 +27,9 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 | Comando / Command | Alias en Español | Alias en Inglés | Descripción / Description |
 |---|---|---|---|
 | `CLINE` | `LINEACONST` | `XLINE`, `CONST_LINE` | Dibuja líneas infinitas interactivas con preview en tiempo real. |
+| `CLINE H` / `CLINE_H` | `LINEACONST H` | `XLINE H` | Trazado rápido de líneas infinitas puramente **Horizontales** (1 clic). |
+| `CLINE V` / `CLINE_V` | `LINEACONST V` | `XLINE V` | Trazado rápido de líneas infinitas puramente **Verticales** (1 clic). |
+| `CLINE <ángulo>` | `LINEACONST <ang>` | `XLINE <ang>` | Trazado de líneas infinitas con un ángulo fijo (ej. `CLINE 45`). |
 | `CRAY` | `RAYO` | `CONST_RAY` | Dibuja semirrectas infinitas desde un punto base. |
 | `CCIRCLE` | `CIRCULOCONST` | `CONST_CIRCLE` | Dibuja círculos auxiliares de referencia. |
 | `CLAYER` | `CAPACONST`, `CAPAC` | `CONST_LAYER` | Alterna cualquier capa (activa, seleccionada o por nombre) como capa de construcción. |
@@ -47,7 +50,7 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 4. Reinicia Open CAD Studio para comenzar a utilizar la nueva pestaña en la Cinta.
 
 ### Método 2: Instalación Manual
-1. Descarga la versión correspondiente a tu sistema operativo desde [Releases](https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin/releases):
+1. Descarga la versión correspondiente a tu sistema operativo desde [Releases](https://github.com/alan0018ad/opencad-construction-plugin/releases):
    * Windows: `opencad.construction-windows-x86_64.dll`
    * Linux: `opencad.construction-linux-x86_64.so`
    * macOS: `opencad.construction-macos-aarch64.dylib`
@@ -64,8 +67,8 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 Requisitos: [Rust y Cargo](https://rustup.rs/) instalados.
 
 ```bash
-git clone https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin.git
-cd OpenCadStudio-construction-layer-plugin
+git clone https://github.com/alan0018ad/opencad-construction-plugin.git
+cd opencad-construction-plugin
 cargo build --release
 ```
 

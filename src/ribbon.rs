@@ -26,6 +26,18 @@ impl CadModule for ConstructionModule {
                             icon: IconKind::Svg(include_bytes!("../icons/cline.svg")),
                             event: ModuleEvent::Command("CLINE".to_string()),
                         }),
+                        RibbonItem::Tool(ToolDef {
+                            id: "CLINE_H",
+                            label: "Horizontal",
+                            icon: IconKind::Glyph("―"),
+                            event: ModuleEvent::Command("CLINE H".to_string()),
+                        }),
+                        RibbonItem::Tool(ToolDef {
+                            id: "CLINE_V",
+                            label: "Vertical",
+                            icon: IconKind::Glyph("|"),
+                            event: ModuleEvent::Command("CLINE V".to_string()),
+                        }),
                         RibbonItem::LargeTool(ToolDef {
                             id: "CRAY",
                             label: "Rayo Guía",
