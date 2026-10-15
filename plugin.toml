@@ -5,7 +5,7 @@ version = "0.2.0"
 description = "Construction layers, infinite lines, rays, and reference guides inspired by LibreCAD & FreeCAD."
 author = "AAD001-Dwg & Open CAD Studio Community"
 license = "GPL-3.0-only"
-repository = "https://github.com/AAD001-Dwg/opencad-construction-plugin"
+repository = "https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin"
 
 [opencad]
 api_version = 9

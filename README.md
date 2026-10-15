@@ -2,7 +2,7 @@
 
 [![Open CAD Studio](https://img.shields.io/badge/Open_CAD_Studio-Add--on-blue.svg)](https://github.com/HakanSeven12/OpenCADStudio)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/AAD001-Dwg/opencad-construction-plugin)](https://github.com/AAD001-Dwg/opencad-construction-plugin/releases)
+[![GitHub release](https://img.shields.io/github/v/release/AAD001-Dwg/OpenCadStudio-construction-layer-plugin)](https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin/releases)
 
 Complemento para **Open CAD Studio** que introduce **Capas de Construcción y Líneas Guía Infinitas**, inspirado en las mejores características de **LibreCAD** y **FreeCAD**.
 
@@ -47,7 +47,7 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 4. Reinicia Open CAD Studio para comenzar a utilizar la nueva pestaña en la Cinta.
 
 ### Método 2: Instalación Manual
-1. Descarga la versión correspondiente a tu sistema operativo desde [Releases](https://github.com/AAD001-Dwg/opencad-construction-plugin/releases):
+1. Descarga la versión correspondiente a tu sistema operativo desde [Releases](https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin/releases):
    * Windows: `opencad.construction-windows-x86_64.dll`
    * Linux: `opencad.construction-linux-x86_64.so`
    * macOS: `opencad.construction-macos-aarch64.dylib`
@@ -64,8 +64,8 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 Requisitos: [Rust y Cargo](https://rustup.rs/) instalados.
 
 ```bash
-git clone https://github.com/AAD001-Dwg/opencad-construction-plugin.git
-cd opencad-construction-plugin
+git clone https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin.git
+cd OpenCadStudio-construction-layer-plugin
 cargo build --release
 ```
 
