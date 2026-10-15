@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Stacked layer sheets -->
+  <path d="M2 17l10 5 10-5" stroke="#8FA3B5" stroke-width="1.6"/>
+  <path d="M2 12l10 5 10-5" stroke="#8FA3B5" stroke-width="1.6"/>
+  <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#6DB7ED" stroke-width="1.8" fill="#6DB7ED" fill-opacity="0.15"/>
+  <!-- Construction dashed axis across the top layer -->
+  <line x1="6" y1="5" x2="18" y2="9" stroke="#6DB7ED" stroke-width="1.6" stroke-dasharray="2 1.5"/>
+</svg>

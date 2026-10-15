@@ -1,0 +1,14 @@
+[package]
+name = "opencad-construction"
+version = "0.2.0"
+edition = "2021"
+description = "Construction layers, infinite lines, rays, and drafting guides inspired by LibreCAD & FreeCAD for Open CAD Studio."
+license = "GPL-3.0-only"
+repository = "https://github.com/AAD001-Dwg/opencad-construction-plugin"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ocs_plugin_api = { git = "https://github.com/HakanSeven12/OpenCADStudio.git", features = ["host"] }
+serde = { version = "1", features = ["derive"] }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Center mark -->
+  <circle cx="12" cy="12" r="1.8" fill="#6DB7ED" stroke="#6DB7ED" stroke-width="1"/>
+  <!-- Crosshairs -->
+  <line x1="8" y1="12" x2="16" y2="12" stroke="#8FA3B5" stroke-width="1.2"/>
+  <line x1="12" y1="8" x2="12" y2="16" stroke="#8FA3B5" stroke-width="1.2"/>
+  <!-- Dashed construction circle -->
+  <circle cx="12" cy="12" r="8.5" stroke="#6DB7ED" stroke-width="1.8" stroke-dasharray="3.5 2"/>
+</svg>

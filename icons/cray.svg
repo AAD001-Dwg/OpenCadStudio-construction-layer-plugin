@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Origin point -->
+  <circle cx="5" cy="19" r="2.5" fill="#6DB7ED" stroke="#6DB7ED" stroke-width="1"/>
+  <!-- Ray extending along diagonal -->
+  <line x1="5" y1="19" x2="22" y2="5" stroke="#6DB7ED" stroke-width="1.8" stroke-dasharray="3 1.5"/>
+  <!-- Ray direction arrow head -->
+  <path d="M22 10V5h-5" stroke="#6DB7ED" stroke-width="1.8"/>
+</svg>

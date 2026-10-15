@@ -1,0 +1,44 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ext: so
+            asset: opencad.construction-linux-x86_64.so
+          - os: windows-latest
+            ext: dll
+            asset: opencad.construction-windows-x86_64.dll
+          - os: macos-latest
+            ext: dylib
+            asset: opencad.construction-macos-aarch64.dylib
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --release
+      - name: Stage release asset
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp target/release/*.${{ matrix.ext }} "dist/${{ matrix.asset }}"
+          acadrust_source=$(grep -A3 '^name = "opencadcodec"' Cargo.lock | grep '^source' | head -1 | sed 's/^source = "//;s/"$//')
+          sed \
+            -e "s|__RUSTC_VERSION__|$(rustc --version)|" \
+            -e "s|__ACADRUST_SOURCE__|$acadrust_source|" \
+            plugin.toml > dist/plugin.toml
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/${{ matrix.asset }}
+            dist/plugin.toml
