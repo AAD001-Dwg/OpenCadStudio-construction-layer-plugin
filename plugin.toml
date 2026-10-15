@@ -1,7 +1,7 @@
 [plugin]
 id = "opencad.construction"
 name = "Construction Layers & Guides"
-version = "0.2.0"
+version = "0.2.1"
 description = "Construction layers, infinite lines, rays, and reference guides inspired by LibreCAD & FreeCAD."
 author = "AAD001-Dwg & Open CAD Studio Community"
 license = "GPL-3.0-only"
