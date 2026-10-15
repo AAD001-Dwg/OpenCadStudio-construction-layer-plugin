@@ -55,7 +55,10 @@ static MANIFEST: PluginManifest = PluginManifest {
     api_version: ApiVersion { major: 9 },
     ribbon_order: 55,
     xdata_apps: &[CONSTRUCTION_APPID],
-    command_prefixes: &["CONST_", "CLINE", "CRAY", "CCIRCLE", "CLAYER", "CAPACONST", "CAPAC"],
+    command_prefixes: &[
+        "CONST_", "CLINE", "CRAY", "CCIRCLE", "CLAYER", "CAPACONST", "CAPAC",
+        "CL", "CH", "CV", "CR", "CC", "CY", "CT",
+    ],
 };
 
 pub struct ConstructionPlugin {
@@ -91,7 +94,7 @@ impl BuiltinPlugin for ConstructionPlugin {
         let arg = parts.get(1).copied();
 
         match cmd_name.as_str() {
-            "CLINE" | "CONST_LINE" | "XLINE" | "LINEACONST" => {
+            "CLINE" | "CONST_LINE" | "XLINE" | "LINEACONST" | "CL" => {
                 setup_construction_layer(host, DEFAULT_CONST_LAYER, false);
                 let command = match arg.map(|s| s.to_uppercase()).as_deref() {
                     Some("H") | Some("HOR") | Some("HORIZONTAL") => {
@@ -112,35 +115,35 @@ impl BuiltinPlugin for ConstructionPlugin {
                 host.start_interactive(Box::new(command));
                 true
             }
-            "CLINE_H" | "XLINE_H" => {
+            "CLINE_H" | "XLINE_H" | "CH" => {
                 setup_construction_layer(host, DEFAULT_CONST_LAYER, false);
                 host.start_interactive(Box::new(ConstructionLineCommand::horizontal(
                     DEFAULT_CONST_LAYER.to_string(),
                 )));
                 true
             }
-            "CLINE_V" | "XLINE_V" => {
+            "CLINE_V" | "XLINE_V" | "CV" => {
                 setup_construction_layer(host, DEFAULT_CONST_LAYER, false);
                 host.start_interactive(Box::new(ConstructionLineCommand::vertical(
                     DEFAULT_CONST_LAYER.to_string(),
                 )));
                 true
             }
-            "CRAY" | "CONST_RAY" | "RAYO" => {
+            "CRAY" | "CONST_RAY" | "RAYO" | "CR" => {
                 setup_construction_layer(host, DEFAULT_CONST_LAYER, false);
                 host.start_interactive(Box::new(ConstructionRayCommand::new(
                     DEFAULT_CONST_LAYER.to_string(),
                 )));
                 true
             }
-            "CCIRCLE" | "CONST_CIRCLE" | "CIRCULOCONST" => {
+            "CCIRCLE" | "CONST_CIRCLE" | "CIRCULOCONST" | "CC" => {
                 setup_construction_layer(host, DEFAULT_CONST_LAYER, false);
                 host.start_interactive(Box::new(ConstructionCircleCommand::new(
                     DEFAULT_CONST_LAYER.to_string(),
                 )));
                 true
             }
-            "CLAYER" | "CONST_LAYER" | "CAPACONST" | "CAPAC" => {
+            "CLAYER" | "CONST_LAYER" | "CAPACONST" | "CAPAC" | "CY" => {
                 toggle_layer_as_construction(host, arg);
                 true
             }
@@ -148,7 +151,7 @@ impl BuiltinPlugin for ConstructionPlugin {
                 setup_construction_layer(host, DEFAULT_CONST_LAYER, true);
                 true
             }
-            "CONST_TOGGLE" => {
+            "CONST_TOGGLE" | "CT" => {
                 toggle_construction_layer(host, DEFAULT_CONST_LAYER);
                 true
             }
