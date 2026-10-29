@@ -1,6 +1,6 @@
 [package]
 name = "opencad-construction"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 description = "Construction layers, infinite lines, rays, and drafting guides inspired by LibreCAD & FreeCAD for Open CAD Studio."
 license = "GPL-3.0-only"

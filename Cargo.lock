@@ -3,6 +3,31 @@
 version = 4
 
 [[package]]
+name = "acadrust"
+version = "0.6.8"
+source = "git+https://github.com/HakanSeven12/acadrust.git?rev=ef8ba01#ef8ba017278e70961473cc5ebd8cfb5f4ab2df07"
+dependencies = [
+ "anyhow",
+ "bitflags",
+ "byteorder",
+ "encoding_rs",
+ "flate2",
+ "foldhash",
+ "indexmap",
+ "itoa",
+ "memchr",
+ "memmap2",
+ "nom",
+ "oem_cp",
+ "once_cell",
+ "rayon",
+ "ryu",
+ "serde",
+ "thiserror 2.0.21",
+ "web-time",
+]
+
+[[package]]
 name = "adler2"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -505,7 +530,7 @@ dependencies = [
 [[package]]
 name = "ocs_plugin_api"
 version = "0.2.1"
-source = "git+https://github.com/HakanSeven12/OpenCADStudio.git#f7bd0ca5eee1240ea01fa39c50e908d5f82b81bd"
+source = "git+https://github.com/HakanSeven12/OpenCADStudio.git#615023fdd1c5a38ca7eb27beffb87a084b8c3284"
 dependencies = [
  "bincode",
  "cargo-lock",
@@ -513,13 +538,22 @@ dependencies = [
  "interprocess",
  "libloading",
  "memmap2",
- "opencadcodec",
+ "opencaddocument",
  "rkyv",
  "serde",
  "serde-reflection",
  "serde_bytes",
  "serde_json",
  "thiserror 1.0.69",
+]
+
+[[package]]
+name = "oem_cp"
+version = "2.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c7959d3349f484aec36462f98226983578bf7d33f9b034c32967489c7000e1f"
+dependencies = [
+ "phf",
 ]
 
 [[package]]
@@ -530,33 +564,19 @@ checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
 name = "opencad-construction"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "ocs_plugin_api",
  "serde",
 ]
 
 [[package]]
-name = "opencadcodec"
-version = "0.6.0"
-source = "git+https://github.com/HakanSeven12/opencadcodec.git?rev=2c2a3fb#2c2a3fb06f0401ccf867154891e9877528cc60f2"
+name = "opencaddocument"
+version = "0.1.0"
+source = "git+https://github.com/HakanSeven12/opencaddocument.git?rev=52fa133#52fa133081f6f1aa1046f7b16e4b1ec119e9dcc9"
 dependencies = [
- "anyhow",
- "bitflags",
- "byteorder",
- "encoding_rs",
- "flate2",
- "foldhash",
- "indexmap",
- "itoa",
- "memmap2",
- "nom",
- "once_cell",
- "rayon",
- "ryu",
+ "acadrust",
  "serde",
- "thiserror 2.0.21",
- "web-time",
 ]
 
 [[package]]
@@ -564,6 +584,24 @@ name = "percent-encoding"
 version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
+
+[[package]]
+name = "phf"
+version = "0.11.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd6780a80ae0c52cc120a26a1a42c1ae51b247a253e4e06113d23d2c2edd078"
+dependencies = [
+ "phf_shared",
+]
+
+[[package]]
+name = "phf_shared"
+version = "0.11.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67eabc2ef2a60eb7faa00097bd1ffdb5bd28e62bf39990626a582201b7a754e5"
+dependencies = [
+ "siphasher",
+]
 
 [[package]]
 name = "pin-project-lite"
@@ -809,6 +847,12 @@ name = "simdutf8"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
+
+[[package]]
+name = "siphasher"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "33f4fe9184a62d842c9ef383018f3306d8ba224fd9d836f56d7288308847c256"
 
 [[package]]
 name = "slab"

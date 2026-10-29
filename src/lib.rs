@@ -24,12 +24,12 @@ use ocs_plugin_api::host::{
     codec::{
         entities::XLine,
         types::{Color, Vector3},
-        EntityType,
+        EntityType, Handle,
     },
     BuiltinPlugin, HostApi, HostNotification, PluginRequestSender,
 };
 use ocs_plugin_api::ipc::protocol::{PluginRequest, PluginResponse};
-use ocs_plugin_api::manifest::{ApiVersion, PluginManifest};
+use ocs_plugin_api::manifest::{ApiVersion, EntityClasses, PluginManifest};
 use ocs_plugin_api::ribbon::CadModule;
 
 use crate::commands::{
@@ -52,12 +52,23 @@ static MANIFEST: PluginManifest = PluginManifest {
     name: "Construction Layers & Guides",
     version: env!("CARGO_PKG_VERSION"),
     description: "Construction layers, infinite lines, rays, and reference guides inspired by LibreCAD.",
-    api_version: ApiVersion { major: 9 },
+    api_version: ApiVersion { major: 14 },
     ribbon_order: 55,
     xdata_apps: &[CONSTRUCTION_APPID],
     command_prefixes: &[
         "CONST_", "CLINE", "CRAY", "CCIRCLE", "CLAYER", "CAPACONST", "CAPAC",
         "CL", "CH", "CV", "CR", "CC", "CY", "CT",
+    ],
+};
+
+static ENTITY_CLASSES: EntityClasses = EntityClasses {
+    app_id: CONSTRUCTION_APPID,
+    class_prefix: "CONST-CLASS:",
+    labels: &[
+        ("XLINE", "Línea de Construcción Infinita"),
+        ("RAY", "Rayo Auxiliar de Referencia"),
+        ("CCIRCLE", "Círculo Guía de Referencia"),
+        ("LINE", "Guía de Construcción"),
     ],
 };
 
@@ -82,6 +93,10 @@ impl BuiltinPlugin for ConstructionPlugin {
 
     fn ribbon(&self) -> Box<dyn CadModule> {
         Box::new(ConstructionModule)
+    }
+
+    fn entity_classes(&self) -> Option<&'static EntityClasses> {
+        Some(&ENTITY_CLASSES)
     }
 
     fn dispatch(&self, host: &mut dyn HostApi, cmd: &str) -> bool {
@@ -187,6 +202,22 @@ impl BuiltinPlugin for ConstructionPlugin {
                     std::thread::spawn(move || {
                         handle_document_opened_async(&*sender);
                     });
+                }
+            }
+            HostNotification::DocumentChangedRegions {
+                tab_id: _,
+                version: _,
+                entities,
+                records: _,
+            } => {
+                if !entities.is_empty() {
+                    let sender_opt = self.sender.lock().unwrap().clone();
+                    let busy = Arc::clone(&self.processing_change);
+                    if let Some(sender) = sender_opt {
+                        std::thread::spawn(move || {
+                            handle_changed_regions_async(&*sender, busy, entities);
+                        });
+                    }
                 }
             }
             HostNotification::DrawingChanged { tab_id: _, epoch: _ } => {
@@ -321,20 +352,101 @@ fn handle_drawing_changed_async(sender: &dyn PluginRequestSender, busy: Arc<Atom
     )));
 }
 
-// Export the C-ABI symbols expected by Open CAD Studio plugin loader for API v9.
-#[no_mangle]
-pub extern "C" fn ocs_plugin_api_version() -> u32 {
-    9
+/// O(changed) reactive auto-conversion using API v13/v14 dirty regions.
+fn handle_changed_regions_async(
+    sender: &dyn PluginRequestSender,
+    busy: Arc<AtomicBool>,
+    handles: Vec<Handle>,
+) {
+    if handles.is_empty() {
+        return;
+    }
+
+    if busy.compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst).is_err() {
+        return;
+    }
+
+    struct Guard(Arc<AtomicBool>);
+    impl Drop for Guard {
+        fn drop(&mut self) {
+            self.0.store(false, Ordering::SeqCst);
+        }
+    }
+    let _guard = Guard(Arc::clone(&busy));
+
+    let Ok(PluginResponse::GetEntitiesBatchResult(Ok(entities_opt))) =
+        sender.request(PluginRequest::GetEntitiesBatch {
+            handles: handles.clone(),
+        })
+    else {
+        return;
+    };
+
+    let mut to_convert: Vec<(Handle, EntityType)> = Vec::new();
+
+    for (handle, maybe_entity) in handles.into_iter().zip(entities_opt.into_iter()) {
+        let Some(EntityType::Line(line)) = maybe_entity else {
+            continue;
+        };
+
+        if !is_construction_layer_name_or_desc(&line.common.layer, "") {
+            continue;
+        }
+
+        let p1 = line.start;
+        let p2 = line.end;
+        let dx = p2.x - p1.x;
+        let dy = p2.y - p1.y;
+        let dz = p2.z - p1.z;
+        let len = (dx * dx + dy * dy + dz * dz).sqrt();
+
+        if len < 1e-6 {
+            continue;
+        }
+
+        let dir = Vector3::new(dx / len, dy / len, dz / len);
+        let mut xline = XLine::new(p1, dir);
+        xline.common.layer = line.common.layer.clone();
+        xline.common.color = if line.common.color == Color::ByLayer {
+            Color::Rgb {
+                r: 109,
+                g: 183,
+                b: 237,
+            }
+        } else {
+            line.common.color
+        };
+
+        to_convert.push((handle, EntityType::XLine(xline)));
+    }
+
+    if to_convert.is_empty() {
+        return;
+    }
+
+    let _ = sender.request(PluginRequest::PushUndo {
+        label: "Auto-Convert Construction Lines (Regions)".to_string(),
+    });
+
+    let count = to_convert.len();
+    for (old_handle, new_entity) in to_convert {
+        let _ = sender.request(PluginRequest::RemoveEntity { handle: old_handle });
+        if let Ok(PluginResponse::Handle(new_handle)) =
+            sender.request(PluginRequest::AddEntity(new_entity))
+        {
+            let _ = sender.request(PluginRequest::SetReferenceOnly {
+                handle: new_handle,
+                reference_only: true,
+            });
+        }
+    }
+
+    let _ = sender.request(PluginRequest::BumpGeometry);
+    let _ = sender.request(PluginRequest::SetDirty);
+    let _ = sender.request(PluginRequest::PushInfo(format!(
+        "Guías de Construcción: {count} línea(s) convertidas automáticamente a guías infinitas (región rápida)."
+    )));
 }
 
-#[no_mangle]
-pub extern "C" fn ocs_plugin_register() -> *mut ::std::boxed::Box<dyn BuiltinPlugin> {
-    match ::std::panic::catch_unwind(::std::panic::AssertUnwindSafe(|| {
-        let plugin: ::std::boxed::Box<dyn BuiltinPlugin> =
-            ::std::boxed::Box::new(ConstructionPlugin::default());
-        ::std::boxed::Box::into_raw(::std::boxed::Box::new(plugin))
-    })) {
-        ::std::result::Result::Ok(ptr) => ptr,
-        ::std::result::Result::Err(_) => ::std::ptr::null_mut(),
-    }
-}
+// Export the C-ABI symbols expected by Open CAD Studio plugin loader for API v14.
+ocs_plugin_api::export_plugin!(ConstructionPlugin::default());

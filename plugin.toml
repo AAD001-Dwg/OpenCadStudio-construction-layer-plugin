@@ -1,16 +1,14 @@
 [plugin]
 id = "opencad.construction"
 name = "Construction Layers & Guides"
-version = "0.2.1"
+version = "0.3.0"
 description = "Construction layers, infinite lines, rays, and reference guides inspired by LibreCAD & FreeCAD."
 author = "AAD001-Dwg & Open CAD Studio Community"
 license = "GPL-3.0-only"
 repository = "https://github.com/AAD001-Dwg/OpenCadStudio-construction-layer-plugin"
 
 [opencad]
-api_version = 9
-rustc_version = "rustc 1.99.0 (b940084d7 2026-09-28)"
-acadrust_source = "git+https://github.com/HakanSeven12/opencadcodec.git?rev=fddcbae#fddcbae2fd7ca8f9d404bb8ca5cc8611a28d1c67"
+api_version = 14
 ribbon_order = 55
 command_prefixes = ["CONST_", "CLINE", "CRAY", "CCIRCLE", "CLAYER", "CAPACONST", "CAPAC", "CL", "CH", "CV", "CR", "CC", "CY", "CT"]
 xdata_apps = ["OPENCAD_CONSTRUCTION"]

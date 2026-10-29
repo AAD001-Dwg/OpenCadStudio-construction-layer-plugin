@@ -32,11 +32,7 @@ jobs:
         run: |
           mkdir -p dist
           cp target/release/*.${{ matrix.ext }} "dist/${{ matrix.asset }}"
-          acadrust_source=$(grep -A3 '^name = "opencadcodec"' Cargo.lock | grep '^source' | head -1 | sed 's/^source = "//;s/"$//')
-          sed \
-            -e "s|__RUSTC_VERSION__|$(rustc --version)|" \
-            -e "s|__ACADRUST_SOURCE__|$acadrust_source|" \
-            plugin.toml > dist/plugin.toml
+          cp plugin.toml dist/plugin.toml
       - uses: softprops/action-gh-release@v2
         with:
           files: |

@@ -12,12 +12,14 @@ An add-on for **Open CAD Studio** providing **Construction Layers and Infinite D
 
 ## ✨ Características / Features
 
+- 🚀 **Actualizado a Open CAD Studio API v14:** Ejecución nativa out-of-process desacoplada del compilador (`ocs_plugin_run`), compatible con los últimos estándares de Open CAD Studio.
 - ⟷ **Líneas Infinitas (`CLINE` / `CL` / `XLINE`):** Trazado de líneas de construcción infinitas con previsualización en tiempo real (*real-time GPU preview*). Permite proyectar múltiples líneas radiales desde un mismo punto de origen.
 - ⟶ **Rayos Guía (`CRAY` / `CR`):** Semirrectas infinitas a partir de un punto base hacia una dirección.
 - ○ **Círculos de Referencia (`CCIRCLE` / `CC`):** Circunferencias auxiliares ideales para círculos de centros de agujeros y radios de referencia.
-- ✦ **Modo Referencia Inteligente (*Reference-Only* - API v9):** Las geometrías de construcción permiten el 100% de captura y precisión (*OSNAP*: extremos, centros, intersecciones), pero los clics ordinarios del mouse las atraviesan (*click-through*), evitando selecciones accidentales mientras diseñas.
+- 🏷 **Clases de Entidad para el Inspector (`EntityClasses` - API v10):** Muestra títulos claros en el panel de propiedades (`Línea de Construcción Infinita`, `Rayo Auxiliar de Referencia`, `Círculo Guía de Referencia`) al seleccionar cualquier entidad creada o convertida por el plugin.
+- ✦ **Modo Referencia Inteligente (*Reference-Only* - API v9+):** Las geometrías de construcción permiten el 100% de captura y precisión (*OSNAP*: extremos, centros, intersecciones), pero los clics ordinarios del mouse las atraviesan (*click-through*), evitando selecciones accidentales mientras diseñas.
 - 🖨 **100% No-Imprimible (*No-Plot*):** Las capas de construcción se configuran automáticamente como no ploteables, garantizando que nunca aparezcan en planos impresos ni en exportaciones PDF.
-- 🔄 **Auto-Conversión Reactiva (`HostNotification::DrawingChanged`):** Al dibujar con el comando normal `LINE` (`L`) sobre una capa de construcción activa, el plugin convierte automáticamente la línea en una guía infinita y la marca como referencia sin que tengas que cambiar de comando.
+- 🔄 **Auto-Conversión Reactiva Ultrarrápida (`DocumentChangedRegions` - API v13/v14):** Al dibujar con el comando normal `LINE` (`L`) sobre una capa de construcción activa, el plugin procesa las regiones modificadas en lote con $O(\text{changed})$ y convierte automáticamente las líneas en guías infinitas sin latencia ni clonar el documento.
 - 📐 **Presets Rápidos Horizontal / Vertical:** Trazado de guías horizontales (`CH` / `CLINE H`) y verticales (`CV` / `CLINE V`) con un solo clic.
 - ⚡ **Atajos Ultrarrápidos Nativos:** Soporta alias cortos integrados (`CL`, `CH`, `CV`, `CR`, `CC`, `CY`, `CT`) sin necesidad de editar `ocad.pgp`.
 
